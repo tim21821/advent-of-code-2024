@@ -1,5 +1,16 @@
 const FURTHER_LETTERS = ['M', 'A', 'S']
 
+const DIRECTIONS = [
+    CartesianIndex(1, 0),
+    CartesianIndex(-1, 0),
+    CartesianIndex(0, 1),
+    CartesianIndex(0, -1),
+    CartesianIndex(1, 1),
+    CartesianIndex(1, -1),
+    CartesianIndex(-1, 1),
+    CartesianIndex(-1, -1),
+]
+
 checkdirection(grid::Matrix{Char}, xpos::CartesianIndex{2}, direction::CartesianIndex{2}) =
     all(
         i ->
@@ -8,34 +19,8 @@ checkdirection(grid::Matrix{Char}, xpos::CartesianIndex{2}, direction::Cartesian
         1:3,
     )
 
-function countadjacentxmas(grid::Matrix{Char}, xpos::CartesianIndex{2})
-    count = 0
-    if checkdirection(grid, xpos, CartesianIndex(1, 0))
-        count += 1
-    end
-    if checkdirection(grid, xpos, CartesianIndex(-1, 0))
-        count += 1
-    end
-    if checkdirection(grid, xpos, CartesianIndex(0, 1))
-        count += 1
-    end
-    if checkdirection(grid, xpos, CartesianIndex(0, -1))
-        count += 1
-    end
-    if checkdirection(grid, xpos, CartesianIndex(1, 1))
-        count += 1
-    end
-    if checkdirection(grid, xpos, CartesianIndex(1, -1))
-        count += 1
-    end
-    if checkdirection(grid, xpos, CartesianIndex(-1, 1))
-        count += 1
-    end
-    if checkdirection(grid, xpos, CartesianIndex(-1, -1))
-        count += 1
-    end
-    return count
-end
+countadjacentxmas(grid::Matrix{Char}, xpos::CartesianIndex{2}) =
+    count(direction -> checkdirection(grid, xpos, direction), DIRECTIONS)
 
 function buildsx_mas(grid::Matrix{Char}, apos::CartesianIndex{2})
     upperleft = apos + CartesianIndex(-1, -1)
