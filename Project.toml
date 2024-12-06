@@ -3,4 +3,5 @@ authors = ["Tim Mattick <tim.mattick@gmx.de>"]
 
 [deps]
 DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
+Folds = "41a02a25-b8f0-4f67-bc48-60067656b558"
 JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"

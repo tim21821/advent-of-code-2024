@@ -1,4 +1,5 @@
 using DataStructures
+using Folds
 
 const UP = CartesianIndex(-1, 0)
 const DOWN = CartesianIndex(1, 0)
@@ -12,8 +13,33 @@ function turnright(currentdirection::CartesianIndex{2})
         return DOWN
     elseif currentdirection == DOWN
         return LEFT
-    elseif currentdirection == LEFT
+    else
         return UP
+    end
+end
+
+function createsloop(grid::Matrix{Char}, pos::CartesianIndex{2}, startposition::CartesianIndex{2})
+    if grid[pos] == '#' || grid[pos] == '^'
+        return false
+    end
+    currentposition = startposition
+    currentdirection = UP
+    visiteddirections = DefaultDict{CartesianIndex{2},Vector{CartesianIndex{2}}}(
+        () -> Vector{CartesianIndex{2}}(),
+    )
+    while true
+        if currentdirection in visiteddirections[currentposition]
+            return true
+        end
+        push!(visiteddirections[currentposition], currentdirection)
+        nextposition = currentposition + currentdirection
+        if !checkbounds(Bool, grid, nextposition)
+            return false
+        elseif grid[nextposition] == '#' || nextposition == pos
+            currentdirection = turnright(currentdirection)
+        else
+            currentposition = nextposition
+        end
     end
 end
 
@@ -46,34 +72,5 @@ function part2()
 
     grid = stack(collect.(lines); dims = 1)
     startposition = findfirst(c -> c == '^', grid)
-    looppossibilities = 0
-    for i in eachindex(grid)
-        println(i)
-        currentgrid = copy(grid)
-        if currentgrid[i] == '#' || currentgrid[i] == '^'
-            continue
-        end
-        currentgrid[i] = '#'
-        currentposition = startposition
-        currentdirection = UP
-        visiteddirections = DefaultDict{CartesianIndex{2},Vector{CartesianIndex{2}}}(
-            () -> Vector{CartesianIndex{2}}(),
-        )
-        while true
-            if currentdirection in visiteddirections[currentposition]
-                looppossibilities += 1
-                break
-            end
-            push!(visiteddirections[currentposition], currentdirection)
-            nextposition = currentposition + currentdirection
-            if !checkbounds(Bool, grid, nextposition)
-                break
-            elseif currentgrid[nextposition] == '#'
-                currentdirection = turnright(currentdirection)
-            else
-                currentposition = nextposition
-            end
-        end
-    end
-    return looppossibilities
+    return Folds.count(pos -> createsloop(grid, pos, startposition), CartesianIndices(grid))
 end
