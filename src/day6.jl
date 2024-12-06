@@ -18,7 +18,27 @@ function turnright(currentdirection::CartesianIndex{2})
     end
 end
 
-function createsloop(grid::Matrix{Char}, pos::CartesianIndex{2}, startposition::CartesianIndex{2})
+function getpath(grid::Matrix{Char}, position::CartesianIndex{2})
+    direction = UP
+    visited = Set{CartesianIndex{2}}()
+    while true
+        push!(visited, position)
+        nextposition = position + direction
+        if !checkbounds(Bool, grid, nextposition)
+            return visited
+        elseif grid[nextposition] == '#'
+            direction = turnright(direction)
+        else
+            position = nextposition
+        end
+    end
+end
+
+function createsloop(
+    grid::Matrix{Char},
+    pos::CartesianIndex{2},
+    startposition::CartesianIndex{2},
+)
     if grid[pos] == '#' || grid[pos] == '^'
         return false
     end
@@ -50,19 +70,7 @@ function part1()
 
     grid = stack(collect.(lines); dims = 1)
     currentposition = findfirst(c -> c == '^', grid)
-    currentdirection = UP
-    visited = Set{CartesianIndex{2}}()
-    while true
-        push!(visited, currentposition)
-        nextposition = currentposition + currentdirection
-        if !checkbounds(Bool, grid, nextposition)
-            return length(visited)
-        elseif grid[nextposition] == '#'
-            currentdirection = turnright(currentdirection)
-        else
-            currentposition = nextposition
-        end
-    end
+    return length(getpath(grid, currentposition))
 end
 
 function part2()
@@ -72,5 +80,6 @@ function part2()
 
     grid = stack(collect.(lines); dims = 1)
     startposition = findfirst(c -> c == '^', grid)
-    return Folds.count(pos -> createsloop(grid, pos, startposition), CartesianIndices(grid))
+    path = getpath(grid, startposition)
+    return Folds.count(pos -> createsloop(grid, pos, startposition), path)
 end
