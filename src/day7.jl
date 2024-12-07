@@ -2,7 +2,7 @@ concatenate(n::Int, m::Int) = n * 10^(trunc(Int, ceil(log10(m + 1)))) + m
 
 function getpossibleresults1(equation::Vector{Int})
     if length(equation) == 1
-        return Set(equation[1])
+        return equation[1]
     end
 
     results = getpossibleresults1(equation[1:end-1])
@@ -13,7 +13,7 @@ end
 
 function getpossibleresults2(equation::Vector{Int})
     if length(equation) == 1
-        return Set(equation[1])
+        return equation
     end
 
     results = getpossibleresults2(equation[1:end-1])
