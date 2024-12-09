@@ -1,20 +1,20 @@
-function getblocks(diskmap::Vector{Int})
-    blocks = Vector{Int}()
+function getblocks(diskmap::Vector{T}) where {T<:Integer}
+    blocks = Vector{T}()
     empty = false
-    id = 0
+    id = zero(T)
     for count in diskmap
         if empty
-            append!(blocks, [-1 for _ in 1:count])
+            append!(blocks, [-one(T) for _ in 1:count])
         else
             append!(blocks, [id for _ in 1:count])
-            id += 1
+            id += one(T)
         end
         empty = !empty
     end
     return blocks
 end
 
-function moveblocks1!(blocks::Vector{Int})
+function moveblocks1!(blocks::Vector{T}) where {T<:Integer}
     firstempty = findfirst(x -> x == -1, blocks)
     lastnotempty = findlast(x -> x != -1, blocks)
     while firstempty < lastnotempty
@@ -24,7 +24,7 @@ function moveblocks1!(blocks::Vector{Int})
     end
 end
 
-function moveblocks2!(blocks::Vector{Int})
+function moveblocks2!(blocks::Vector{T}) where {T<:Integer}
     maxid = maximum(blocks)
     for id in maxid:-1:0
         blockindices = findall(x -> x == id, blocks)
@@ -39,7 +39,7 @@ function moveblocks2!(blocks::Vector{Int})
     end
 end
 
-function getchecksum(blocks::Vector{Int})
+function getchecksum(blocks::Vector{T}) where {T<:Integer}
     checksum = 0
     for (i, block) in enumerate(blocks)
         checksum += max((i - 1) * block, 0)
@@ -52,7 +52,7 @@ function part1()
         return readline(f)
     end
 
-    diskmap = parse.(Int, collect(input))
+    diskmap = parse.(Int16, collect(input))
     blocks = getblocks(diskmap)
     moveblocks1!(blocks)
     return getchecksum(blocks)
@@ -63,7 +63,7 @@ function part2()
         return readline(f)
     end
 
-    diskmap = parse.(Int, collect(input))
+    diskmap = parse.(Int16, collect(input))
     blocks = getblocks(diskmap)
     moveblocks2!(blocks)
     return getchecksum(blocks)
