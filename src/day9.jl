@@ -1,4 +1,4 @@
-function getblocks(diskmap::Vector{T}) where T <: Integer
+function getblocks(diskmap::Vector{T}) where {T<:Integer}
     blocks = Vector{T}()
     empty = false
     id = zero(T)
@@ -14,7 +14,7 @@ function getblocks(diskmap::Vector{T}) where T <: Integer
     return blocks
 end
 
-function moveblocks1!(blocks::Vector{T}) where T <: Integer
+function moveblocks1!(blocks::Vector{T}) where {T<:Integer}
     firstempty = findfirst(x -> x == -1, blocks)
     lastnotempty = findlast(x -> x != -1, blocks)
     while firstempty < lastnotempty
@@ -24,7 +24,7 @@ function moveblocks1!(blocks::Vector{T}) where T <: Integer
     end
 end
 
-function moveblocks2!(blocks::Vector{T}) where T <: Integer
+function moveblocks2!(blocks::Vector{T}) where {T<:Integer}
     maxid = maximum(blocks)
     for id in maxid:-1:0
         blockindices = findall(x -> x == id, blocks)
@@ -39,7 +39,7 @@ function moveblocks2!(blocks::Vector{T}) where T <: Integer
     end
 end
 
-function getchecksum(blocks::Vector{T}) where T <: Integer
+function getchecksum(blocks::Vector{T}) where {T<:Integer}
     checksum = 0
     for (i, block) in enumerate(blocks)
         checksum += max((i - 1) * block, 0)
