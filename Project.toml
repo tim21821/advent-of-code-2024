@@ -4,6 +4,7 @@ authors = ["Tim Mattick <tim.mattick@gmx.de>"]
 [deps]
 DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 Folds = "41a02a25-b8f0-4f67-bc48-60067656b558"
+Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
 JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
 Memoization = "6fafb56a-5788-4b4e-91ca-c0cea6611c73"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
