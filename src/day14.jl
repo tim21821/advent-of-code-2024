@@ -1,6 +1,3 @@
-using StaticArrays
-using Images
-
 const WIDTH = 101
 const HEIGHT = 103
 const ROBOT_RE = r"p=(-?\d+),(-?\d+) v=(-?\d+),(-?\d+)"
@@ -49,6 +46,13 @@ function isinfourthquadrant(robot::Robot)
     return robot.position[1] > width && robot.position[2] > height
 end
 
+function getsafetyscore(robots::Vector{Robot})
+    return count(isinfirstquadrant, robots) *
+           count(isinsecondquadrant, robots) *
+           count(isinthirdquadrant, robots) *
+           count(isinfourthquadrant, robots)
+end
+
 function part1()
     lines = open("input/day14.txt") do f
         return readlines(f)
@@ -59,10 +63,7 @@ function part1()
         move!.(robots)
     end
 
-    return count(isinfirstquadrant, robots) *
-           count(isinsecondquadrant, robots) *
-           count(isinthirdquadrant, robots) *
-           count(isinfourthquadrant, robots)
+    return getsafetyscore(robots)
 end
 
 function part2()
@@ -71,12 +72,10 @@ function part2()
     end
 
     robots = fromline.(lines)
+    safetyscores = Vector{Int}(undef, WIDTH * HEIGHT)
     for i in 1:WIDTH*HEIGHT
         move!.(robots)
-        img = ones(HEIGHT, WIDTH)
-        for robot in robots
-            img[robot.position[2]+1, robot.position[1]+1] = 0
-        end
-        save("output/$i.bmp", img)
+        safetyscores[i] = getsafetyscore(robots)
     end
+    return argmin(safetyscores)
 end
