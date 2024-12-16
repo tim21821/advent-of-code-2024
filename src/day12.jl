@@ -72,6 +72,51 @@ function getperimeter(region::Set{CartesianIndex{2}})
     end
     return perimeter
 end
+
+function getcorners(region::Set{CartesianIndex{2}})
+    corners = 0
+    for tile in region
+        up = tile + UP
+        down = tile + DOWN
+        right = tile + RIGHT
+        left = tile + LEFT
+
+        # get outer corners
+        if !(up in region) && !(right in region)
+            corners += 1
+        end
+        if !(up in region) && !(left in region)
+            corners += 1
+        end
+        if !(down in region) && !(right in region)
+            corners += 1
+        end
+        if !(down in region) && !(left in region)
+            corners += 1
+        end
+
+        upright = tile + UP + RIGHT
+        upleft = tile + UP + LEFT
+        downright = tile + DOWN + RIGHT
+        downleft = tile + DOWN + LEFT
+
+        # get inner corners
+        if up in region && right in region && !(upright in region)
+            corners += 1
+        end
+        if up in region && left in region && !(upleft in region)
+            corners += 1
+        end
+        if down in region && right in region && !(downright in region)
+            corners += 1
+        end
+        if down in region && left in region && !(downleft in region)
+            corners += 1
+        end
+    end
+    return corners
+end
+
 function part1()
     lines = open("input/day12.txt") do f
         return readlines(f)
@@ -82,3 +127,12 @@ function part1()
     return sum(region -> getarea(region) * getperimeter(region), regions)
 end
 
+function part2()
+    lines = open("input/day12.txt") do f
+        return readlines(f)
+    end
+
+    grid = stack(collect.(lines); dims = 1)
+    regions = findregions(grid)
+    return sum(region -> getarea(region) * getcorners(region), regions)
+end
