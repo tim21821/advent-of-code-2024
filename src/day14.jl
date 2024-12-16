@@ -21,7 +21,7 @@ function move!(robot::Robot)
     newposition = robot.position + robot.velocity
     newposition[1] = mod(newposition[1], WIDTH)
     newposition[2] = mod(newposition[2], HEIGHT)
-    robot.position = newposition
+    return robot.position = newposition
 end
 
 
@@ -51,7 +51,7 @@ end
 
 function part1()
     lines = open("input/day14.txt") do f
-        readlines(f)
+        return readlines(f)
     end
 
     robots = fromline.(lines)
@@ -59,12 +59,15 @@ function part1()
         move!.(robots)
     end
 
-    return count(isinfirstquadrant, robots) * count(isinsecondquadrant, robots) * count(isinthirdquadrant, robots) * count(isinfourthquadrant, robots)
+    return count(isinfirstquadrant, robots) *
+           count(isinsecondquadrant, robots) *
+           count(isinthirdquadrant, robots) *
+           count(isinfourthquadrant, robots)
 end
 
 function part2()
     lines = open("input/day14.txt") do f
-        readlines(f)
+        return readlines(f)
     end
 
     robots = fromline.(lines)
