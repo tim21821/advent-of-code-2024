@@ -55,7 +55,7 @@ function part1()
     registers['B'] = parse(Int, split(lines[2], ": ")[2])
     registers['C'] = parse(Int, split(lines[3], ": ")[2])
     program = parse.(Int, split(split(lines[5], ": ")[2], ','))
-    
+
     output = runprogram!(program, registers)
     return join(output, ',')
 end
